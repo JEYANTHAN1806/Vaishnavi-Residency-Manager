@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Vaishnavi Residency - Hotel Management"
+version = "1.0.0"
+id = "artifacts/hotel-mgmt"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 21264
+
+[services.development]
+run = "pnpm --filter @workspace/hotel-mgmt run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/hotel-mgmt", "run", "build" ]
+publicDir = "artifacts/hotel-mgmt/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "21264"
+BASE_PATH = "/"

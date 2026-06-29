@@ -1,0 +1,1 @@
+- [Hotel Mgmt API Schema](hotel-mgmt-schema.md) — Guest uses `mobile`/`advancePaid`/`balanceAmount`/`expectedCheckOutDate`; status values use hyphens not underscores.
