@@ -4,8 +4,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ArrowLeft, Printer, LogOut, Phone, MapPin, BedDouble, Calendar, CreditCard } from "lucide-react";
-import { format } from "date-fns";
+import { format, isValid } from "date-fns";
 import { toast } from "sonner";
+
+function safeFormat(dateStr: string | null | undefined, fmt: string, fallback = "—"): string {
+  if (!dateStr) return fallback;
+  const d = new Date(dateStr);
+  return isValid(d) ? format(d, fmt) : fallback;
+}
 
 const statusColors: Record<string, string> = {
   "checked-in": "bg-green-100 text-green-700",
@@ -154,14 +160,14 @@ export default function GuestDetail() {
                 <Calendar className="w-4 h-4 text-muted-foreground" />
                 <div>
                   <p className="text-muted-foreground text-xs">Check-In</p>
-                  <p className="font-medium">{guest.checkInDate ? format(new Date(guest.checkInDate), "dd MMM yyyy") : "—"}</p>
+                  <p className="font-medium">{safeFormat(guest.checkInDate, "dd MMM yyyy")}</p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
                 <Calendar className="w-4 h-4 text-muted-foreground" />
                 <div>
                   <p className="text-muted-foreground text-xs">Check-Out</p>
-                  <p className="font-medium">{checkOutDate ? format(new Date(checkOutDate), "dd MMM yyyy") : "—"}</p>
+                  <p className="font-medium">{safeFormat(checkOutDate, "dd MMM yyyy")}</p>
                 </div>
               </div>
               <div>
