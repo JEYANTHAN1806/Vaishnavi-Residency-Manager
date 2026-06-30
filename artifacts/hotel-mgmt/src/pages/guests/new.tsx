@@ -8,7 +8,15 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { UserPlus, ArrowLeft } from "lucide-react";
+import { UserPlus, ArrowLeft, Banknote, CreditCard, Smartphone } from "lucide-react";
+
+type PaymentMode = "Cash" | "UPI" | "Card";
+
+const paymentModeOptions: { value: PaymentMode; label: string; icon: React.ReactNode }[] = [
+  { value: "Cash", label: "Cash", icon: <Banknote className="w-4 h-4" /> },
+  { value: "UPI", label: "UPI", icon: <Smartphone className="w-4 h-4" /> },
+  { value: "Card", label: "Card", icon: <CreditCard className="w-4 h-4" /> },
+];
 
 export default function NewGuest() {
   const [, setLocation] = useLocation();
@@ -28,6 +36,7 @@ export default function NewGuest() {
     checkInDate: new Date().toISOString().slice(0, 10),
     expectedCheckOutDate: "",
     advancePaid: "0",
+    paymentMode: "Cash" as PaymentMode,
     remarks: "",
   });
 
@@ -67,6 +76,7 @@ export default function NewGuest() {
           totalAmount,
           advancePaid: advance,
           balanceAmount: balance,
+          paymentMode: form.paymentMode,
           remarks: form.remarks || undefined,
         },
       },
@@ -153,7 +163,7 @@ export default function NewGuest() {
                   <SelectContent>
                     {availableRooms.map(r => (
                       <SelectItem key={r.id} value={String(r.id)}>
-                        Room {r.roomNumber} — {r.type} — ₹{r.rentPerDay}/day
+                        Room {r.roomNumber} — {r.type} {r.acType ? `(${r.acType})` : ""} — ₹{r.rentPerDay}/day
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -188,6 +198,12 @@ export default function NewGuest() {
                   <span className="text-muted-foreground">Room Type</span>
                   <span className="font-medium">{selectedRoom?.type || "—"}</span>
                 </div>
+                {selectedRoom?.acType && (
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">AC Type</span>
+                    <span className="font-medium">{selectedRoom.acType}</span>
+                  </div>
+                )}
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Room No.</span>
                   <span className="font-medium">{selectedRoom?.roomNumber || "—"}</span>
@@ -203,6 +219,27 @@ export default function NewGuest() {
                 <div className="border-t pt-3 flex justify-between text-base font-bold">
                   <span>Total Amount</span>
                   <span className="text-primary">₹{totalAmount || 0}</span>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label>Payment Mode</Label>
+                <div className="flex gap-2">
+                  {paymentModeOptions.map(opt => (
+                    <button
+                      key={opt.value}
+                      type="button"
+                      onClick={() => setForm(f => ({ ...f, paymentMode: opt.value }))}
+                      className={`flex-1 flex flex-col items-center gap-1 py-2.5 rounded-lg border-2 text-xs font-semibold transition-all ${
+                        form.paymentMode === opt.value
+                          ? "border-primary bg-primary/10 text-primary"
+                          : "border-border text-muted-foreground hover:border-primary/50"
+                      }`}
+                    >
+                      {opt.icon}
+                      {opt.label}
+                    </button>
+                  ))}
                 </div>
               </div>
 

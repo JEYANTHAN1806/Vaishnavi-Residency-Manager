@@ -29,6 +29,7 @@ export const roomsTable = pgTable("rooms", {
   id: serial("id").primaryKey(),
   roomNumber: text("room_number").notNull().unique(),
   type: text("type").notNull().default("Standard"),
+  acType: text("ac_type").notNull().default("Non-AC"), // AC | Non-AC
   rentPerDay: numeric("rent_per_day", { precision: 10, scale: 2 }).notNull().default("1000"),
   status: text("status").notNull().default("available"), // available | occupied | reserved | cleaning
   floor: text("floor"),

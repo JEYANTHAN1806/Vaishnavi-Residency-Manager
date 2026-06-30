@@ -65,6 +65,14 @@ export interface UserUpdate {
   role?: UserUpdateRole;
 }
 
+export type RoomAcType = typeof RoomAcType[keyof typeof RoomAcType];
+
+
+export const RoomAcType = {
+  AC: 'AC',
+  'Non-AC': 'Non-AC',
+} as const;
+
 export type RoomStatus = typeof RoomStatus[keyof typeof RoomStatus];
 
 
@@ -79,6 +87,7 @@ export interface Room {
   id: number;
   roomNumber: string;
   type: string;
+  acType: RoomAcType;
   rentPerDay: number;
   status: RoomStatus;
   /** @nullable */
@@ -88,13 +97,30 @@ export interface Room {
   createdAt?: string;
 }
 
+export type RoomInputAcType = typeof RoomInputAcType[keyof typeof RoomInputAcType];
+
+
+export const RoomInputAcType = {
+  AC: 'AC',
+  'Non-AC': 'Non-AC',
+} as const;
+
 export interface RoomInput {
   roomNumber: string;
   type: string;
+  acType?: RoomInputAcType;
   rentPerDay: number;
   floor?: string;
   description?: string;
 }
+
+export type RoomUpdateAcType = typeof RoomUpdateAcType[keyof typeof RoomUpdateAcType];
+
+
+export const RoomUpdateAcType = {
+  AC: 'AC',
+  'Non-AC': 'Non-AC',
+} as const;
 
 export type RoomUpdateStatus = typeof RoomUpdateStatus[keyof typeof RoomUpdateStatus];
 
@@ -109,6 +135,7 @@ export const RoomUpdateStatus = {
 export interface RoomUpdate {
   roomNumber?: string;
   type?: string;
+  acType?: RoomUpdateAcType;
   rentPerDay?: number;
   status?: RoomUpdateStatus;
   floor?: string;

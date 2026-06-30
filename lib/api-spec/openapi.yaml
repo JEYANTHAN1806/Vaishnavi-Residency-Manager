@@ -746,7 +746,7 @@ components:
 
     Room:
       type: object
-      required: [id, roomNumber, type, rentPerDay, status]
+      required: [id, roomNumber, type, acType, rentPerDay, status]
       properties:
         id:
           type: integer
@@ -754,6 +754,9 @@ components:
           type: string
         type:
           type: string
+        acType:
+          type: string
+          enum: [AC, Non-AC]
         rentPerDay:
           type: number
         status:
@@ -774,6 +777,9 @@ components:
           type: string
         type:
           type: string
+        acType:
+          type: string
+          enum: [AC, Non-AC]
         rentPerDay:
           type: number
         floor:
@@ -788,6 +794,9 @@ components:
           type: string
         type:
           type: string
+        acType:
+          type: string
+          enum: [AC, Non-AC]
         rentPerDay:
           type: number
         status:

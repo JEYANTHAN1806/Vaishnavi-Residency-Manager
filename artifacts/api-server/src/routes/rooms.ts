@@ -10,6 +10,7 @@ function formatRoom(r: typeof roomsTable.$inferSelect) {
     id: r.id,
     roomNumber: r.roomNumber,
     type: r.type,
+    acType: r.acType ?? "Non-AC",
     rentPerDay: parseFloat(r.rentPerDay as string),
     status: r.status,
     floor: r.floor ?? null,
@@ -30,7 +31,7 @@ router.get("/rooms", async (req, res) => {
 
 router.post("/rooms", async (req, res) => {
   try {
-    const { roomNumber, type, rentPerDay, floor, description } = req.body;
+    const { roomNumber, type, acType, rentPerDay, floor, description } = req.body;
     if (!roomNumber || !type || rentPerDay === undefined) {
       res.status(400).json({ error: "Missing required fields" });
       return;
@@ -38,6 +39,7 @@ router.post("/rooms", async (req, res) => {
     const rows = await db.insert(roomsTable).values({
       roomNumber,
       type,
+      acType: acType || "Non-AC",
       rentPerDay: String(rentPerDay),
       floor: floor || null,
       description: description || null,
@@ -65,10 +67,11 @@ router.get("/rooms/:id", async (req, res) => {
 router.patch("/rooms/:id", async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    const { roomNumber, type, rentPerDay, status, floor, description } = req.body;
+    const { roomNumber, type, acType, rentPerDay, status, floor, description } = req.body;
     const updateData: Record<string, unknown> = {};
     if (roomNumber !== undefined) updateData.roomNumber = roomNumber;
     if (type !== undefined) updateData.type = type;
+    if (acType !== undefined) updateData.acType = acType;
     if (rentPerDay !== undefined) updateData.rentPerDay = String(rentPerDay);
     if (status !== undefined) updateData.status = status;
     if (floor !== undefined) updateData.floor = floor;

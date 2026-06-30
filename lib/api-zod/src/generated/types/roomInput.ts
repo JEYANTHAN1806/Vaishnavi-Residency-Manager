@@ -5,10 +5,12 @@
  * Vaishnavi Residency Hotel Management API
  * OpenAPI spec version: 0.1.0
  */
+import type { RoomInputAcType } from './roomInputAcType';
 
 export interface RoomInput {
   roomNumber: string;
   type: string;
+  acType?: RoomInputAcType;
   rentPerDay: number;
   floor?: string;
   description?: string;
