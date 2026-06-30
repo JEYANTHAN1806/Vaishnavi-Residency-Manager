@@ -141,7 +141,7 @@ export default function Dashboard() {
                     <div key={res.id} className="flex justify-between items-center border-b border-border last:border-0 pb-3 last:pb-0">
                       <div>
                         <p className="font-medium text-sm text-foreground">{res.guestName}</p>
-                        <p className="text-xs text-muted-foreground">{format(new Date(res.checkInDate), "MMM dd")} - Room {res.roomNumber}</p>
+                        <p className="text-xs text-muted-foreground">{res.checkInDate ? format(new Date(res.checkInDate), "MMM dd") : "?"} - Room {res.roomNumber}</p>
                       </div>
                       <div className="text-right">
                         <p className="font-semibold text-sm text-foreground">Adv: ₹{res.advance || 0}</p>

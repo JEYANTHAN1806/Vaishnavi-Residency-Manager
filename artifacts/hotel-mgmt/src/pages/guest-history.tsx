@@ -7,7 +7,14 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { History, Search, Phone, BedDouble, Printer } from "lucide-react";
-import { format } from "date-fns";
+import { format, isValid } from "date-fns";
+
+const safeFormat = (dateStr: string | null | undefined, fmt: string): string | null => {
+  if (!dateStr) return null;
+  const d = new Date(dateStr);
+  if (!isValid(d)) return null;
+  return format(d, fmt);
+};
 
 const statusColors: Record<string, string> = {
   "checked-in": "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
@@ -112,10 +119,10 @@ function GuestRow({ guest, onPrint, onView }: {
             <span className="flex items-center gap-1"><Phone className="w-3 h-3" />{guest.mobile}</span>
             {guest.roomNumber && <span className="flex items-center gap-1"><BedDouble className="w-3 h-3" />Room {guest.roomNumber}</span>}
             {guest.billNumber && <span className="font-mono">{guest.billNumber}</span>}
-            {guest.checkInDate && (
+            {guest.checkInDate && safeFormat(guest.checkInDate, "dd MMM yy") && (
               <span>
-                {format(new Date(guest.checkInDate), "dd MMM yy")}
-                {checkOutDate && ` → ${format(new Date(checkOutDate), "dd MMM yy")}`}
+                {safeFormat(guest.checkInDate, "dd MMM yy")}
+                {checkOutDate && safeFormat(checkOutDate, "dd MMM yy") && ` → ${safeFormat(checkOutDate, "dd MMM yy")}`}
                 {nights && ` (${nights}N)`}
               </span>
             )}

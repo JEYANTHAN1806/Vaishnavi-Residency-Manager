@@ -18,7 +18,7 @@ export default function PrintBills() {
 
   const { data: guests } = useGetGuests();
   const { data: settings } = useGetSettings();
-  const { data: guest, isLoading } = useGetGuest(effectiveId || 0);
+  const { data: guest, isLoading } = useGetGuest(effectiveId || 0, { query: { enabled: effectiveId > 0 } });
   const printRef = useRef<HTMLDivElement>(null);
 
   const handlePrint = () => {
