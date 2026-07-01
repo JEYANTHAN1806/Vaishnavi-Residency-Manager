@@ -1,6 +1,12 @@
 import { useRef, useState } from "react";
 import { useSearch, useLocation } from "wouter";
-import { useGetGuests, useGetGuest, useGetSettings } from "@workspace/api-client-react";
+import {
+  useGetGuests,
+  useGetGuest,
+  useGetSettings,
+  type Guest,
+  type Settings,
+} from "@workspace/api-client-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -15,8 +21,8 @@ function safeFormat(dateStr: string | null | undefined, fmt: string, fallback = 
 }
 
 function buildBillHtml(
-  guest: NonNullable<ReturnType<typeof useGetGuest>["data"]>,
-  settings: ReturnType<typeof useGetSettings>["data"],
+   guest: Guest,
+  settings: Settings | undefined,
   nights: number,
   rentPerDay: number,
   roomCharge: number,
