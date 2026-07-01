@@ -140,7 +140,7 @@ export default function PrintBills() {
 
   const { data: guests } = useGetGuests();
   const { data: settings } = useGetSettings();
-  const { data: guest, isLoading } = useGetGuest(effectiveId || 0, { query: { enabled: effectiveId > 0 } });
+  const { data: guest, isLoading } = useGetGuest(effectiveId || 0);
   const printRef = useRef<HTMLDivElement>(null);
 
   const checkOutDate = guest?.actualCheckOutDate || guest?.expectedCheckOutDate;
@@ -190,8 +190,8 @@ export default function PrintBills() {
 
   const handleWhatsApp = () => {
     if (!guest) return;
-    const mobile = guest.mobile?.replace(/\D/g, "");
-    const intlMobile = mobile.startsWith("91") ? mobile : `91${mobile}`;
+    const mobile = (guest.mobile ?? "").replace(/\D/g, "");
+const intlMobile = mobile.startsWith("91") ? mobile : `91${mobile}`;
     const checkIn = safeFormat(guest.checkInDate, "dd MMM yyyy");
     const checkOut = safeFormat(checkOutDate, "dd MMM yyyy");
     const msg = [
