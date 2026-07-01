@@ -38,7 +38,7 @@ const frontendPath = path.resolve(
 
 app.use(express.static(frontendPath));
 
-app.get("*", (_req, res) => {
+app.get("/{*path}", (_req, res) => {
   res.sendFile(path.join(frontendPath, "index.html"));
 });
 
