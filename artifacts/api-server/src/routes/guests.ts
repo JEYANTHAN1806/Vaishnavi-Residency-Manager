@@ -240,7 +240,7 @@ router.post("/guests/:id/checkout", async (req, res) => {
     const now = new Date();
     const updateData: Record<string, unknown> = {
       status: "checked-out",
-      actualCheckOutDate: actualCheckOutDate || now.toLocaleDateString("en-IN"),
+      actualCheckOutDate: actualCheckOutDate || now.toISOString().split("T")[0],
       actualCheckOutTime: actualCheckOutTime || now.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" }),
     };
     if (balanceAmount !== undefined) updateData.balanceAmount = String(balanceAmount);

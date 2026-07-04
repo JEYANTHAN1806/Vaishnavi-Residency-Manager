@@ -12,14 +12,25 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Printer, ArrowLeft, MessageCircle } from "lucide-react";
-import { format, isValid } from "date-fns";
+import { format, isValid, parseISO } from "date-fns";
 
-function safeFormat(dateStr: string | null | undefined, fmt: string, fallback = "—"): string {
+function safeFormat(
+  dateStr: string | null | undefined,
+  fmt: string,
+  fallback = "—"
+): string {
   if (!dateStr) return fallback;
-  const d = new Date(dateStr);
+
+  let d;
+
+  if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+    d = parseISO(dateStr);
+  } else {
+    d = new Date(dateStr);
+  }
+
   return isValid(d) ? format(d, fmt) : fallback;
 }
-
 function buildBillHtml(
    guest: Guest,
   settings: Settings | undefined,
@@ -144,9 +155,17 @@ export default function PrintBills() {
   const printRef = useRef<HTMLDivElement>(null);
 
   const checkOutDate = guest?.actualCheckOutDate || guest?.expectedCheckOutDate;
-  const nights = checkOutDate && guest?.checkInDate
-    ? Math.max(1, Math.round((new Date(checkOutDate).getTime() - new Date(guest.checkInDate).getTime()) / 86400000))
-    : (guest?.numberOfDays || 1);
+  const nights =
+  checkOutDate && guest?.checkInDate
+    ? Math.max(
+        1,
+        Math.round(
+          (parseISO(checkOutDate).getTime() -
+            parseISO(guest.checkInDate).getTime()) /
+            86400000
+        )
+      )
+    : guest?.numberOfDays || 1;
   const rentPerDay = parseFloat(String(guest?.rentPerDay || 0));
   const roomCharge = rentPerDay * nights;
   const taxRate = settings?.taxEnabled ? parseFloat(String(settings.taxRate || 0)) / 100 : 0;
