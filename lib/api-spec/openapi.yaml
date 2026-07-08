@@ -19,6 +19,8 @@ tags:
     description: Reservation management
   - name: payments
     description: Payment management
+  - name: vouchers
+    description: Voucher management
   - name: invoices
     description: Invoice management
   - name: reports
@@ -489,6 +491,137 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/VoucherNumberResponse"
+
+  # VOUCHERS
+  /vouchers:
+    get:
+      operationId: getVouchers
+      tags: [vouchers]
+      summary: List all vouchers
+      parameters:
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum: [payment, receipt]
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: fromDate
+          in: query
+          schema:
+            type: string
+        - name: toDate
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of vouchers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Voucher"
+    post:
+      operationId: createVoucher
+      tags: [vouchers]
+      summary: Create a new voucher
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VoucherInput"
+      responses:
+        "201":
+          description: Voucher created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Voucher"
+
+  /vouchers/next-voucher-number:
+    get:
+      operationId: getNextVoucherNumberForType
+      tags: [vouchers]
+      summary: Get next voucher number for a voucher type
+      parameters:
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum: [payment, receipt]
+      responses:
+        "200":
+          description: Next voucher number
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VoucherNumberResponse"
+
+  /vouchers/{id}:
+    get:
+      operationId: getVoucher
+      tags: [vouchers]
+      summary: Get a voucher by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Voucher details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Voucher"
+        "404":
+          description: Not found
+    put:
+      operationId: updateVoucher
+      tags: [vouchers]
+      summary: Update a voucher
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VoucherUpdate"
+      responses:
+        "200":
+          description: Voucher updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Voucher"
+        "404":
+          description: Not found
+    delete:
+      operationId: deleteVoucher
+      tags: [vouchers]
+      summary: Delete a voucher
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+        "404":
+          description: Not found
 
   # REPORTS
   /reports/dashboard:
@@ -1149,6 +1282,90 @@ components:
       required: [voucherNumber]
       properties:
         voucherNumber:
+          type: string
+
+    Voucher:
+      type: object
+      required: [id, voucherNumber, type, name, reason, amount, date]
+      properties:
+        id:
+          type: integer
+        voucherNumber:
+          type: string
+        type:
+          $ref: "#/components/schemas/VoucherType"
+        name:
+          type: string
+        reason:
+          type: string
+        amount:
+          type: number
+        amountInWords:
+          type: string
+          nullable: true
+        date:
+          type: string
+        approvedBy:
+          type: string
+          nullable: true
+        receivedBy:
+          type: string
+          nullable: true
+        remarks:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+
+    VoucherType:
+      type: string
+      enum: [payment, receipt]
+
+    VoucherInput:
+      type: object
+      required: [type, name, reason, amount]
+      properties:
+        type:
+          $ref: "#/components/schemas/VoucherType"
+        name:
+          type: string
+        reason:
+          type: string
+        amount:
+          type: number
+        amountInWords:
+          type: string
+        date:
+          type: string
+        approvedBy:
+          type: string
+        receivedBy:
+          type: string
+        remarks:
+          type: string
+
+    VoucherUpdate:
+      type: object
+      properties:
+        type:
+          $ref: "#/components/schemas/VoucherType"
+        name:
+          type: string
+        reason:
+          type: string
+        amount:
+          type: number
+        amountInWords:
+          type: string
+        date:
+          type: string
+        approvedBy:
+          type: string
+        receivedBy:
+          type: string
+        remarks:
           type: string
 
     DashboardStats:

@@ -3,11 +3,12 @@ import {
   useGetRecentGuests,
   useGetUpcomingReservations,
   useGetRevenueReport,
+  useGetVouchers,
 } from "@workspace/api-client-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
-  Users, LogOut, BedDouble, Key, IndianRupee, Wallet, TrendingUp, CalendarRange
+  Users, LogOut, BedDouble, Key, IndianRupee, Wallet, TrendingUp, CalendarRange, FileText
 } from "lucide-react";
 import { format } from "date-fns";
 import {
@@ -19,6 +20,12 @@ export default function Dashboard() {
   const { data: recentGuests, isLoading: guestsLoading } = useGetRecentGuests();
   const { data: upcomingReservations, isLoading: reservationsLoading } = useGetUpcomingReservations();
   const { data: revenueData, isLoading: revenueLoading } = useGetRevenueReport({ period: "week" });
+  const { data: vouchers } = useGetVouchers();
+
+  const todayStr = new Date().toISOString().slice(0, 10);
+  const todayVouchers = vouchers?.filter((v) => v.date === todayStr) || [];
+  const todayVoucherAmount = todayVouchers.reduce((s, v) => s + v.amount, 0);
+  const recentVouchers = vouchers?.slice(0, 5) || [];
 
   const statCards = [
     { title: "Today's Check-ins", value: stats?.todayCheckIns, icon: Users, color: "text-blue-500" },
@@ -147,6 +154,59 @@ export default function Dashboard() {
                         <p className="font-semibold text-sm text-foreground">Adv: ₹{res.advance || 0}</p>
                         <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400">
                           {res.status}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Voucher Widgets */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Card className="shadow-sm border-border">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-lg flex items-center gap-2">
+                <FileText className="w-5 h-5 text-primary" /> Today's Vouchers
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex justify-between items-center">
+                <div>
+                  <p className="text-3xl font-bold text-primary">{todayVouchers.length}</p>
+                  <p className="text-xs text-muted-foreground mt-1">vouchers created today</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-xl font-semibold">₹{todayVoucherAmount.toLocaleString("en-IN")}</p>
+                  <p className="text-xs text-muted-foreground">total value</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="shadow-sm border-border md:col-span-2">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-lg flex items-center gap-2">
+                <FileText className="w-5 h-5 text-primary" /> Recent Vouchers
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {recentVouchers.length === 0 ? (
+                <div className="text-center py-6 text-muted-foreground text-sm">No vouchers yet</div>
+              ) : (
+                <div className="space-y-2">
+                  {recentVouchers.map((v) => (
+                    <div key={v.id} className="flex justify-between items-center border-b border-border last:border-0 pb-2 last:pb-0">
+                      <div>
+                        <p className="font-mono text-xs text-primary">{v.voucherNumber}</p>
+                        <p className="font-medium text-sm">{v.name}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-semibold text-sm">₹{v.amount.toLocaleString("en-IN")}</p>
+                        <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${v.type === "payment" ? "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400" : "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"}`}>
+                          {v.type}
                         </span>
                       </div>
                     </div>

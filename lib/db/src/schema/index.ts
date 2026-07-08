@@ -118,6 +118,27 @@ export const insertPaymentSchema = createInsertSchema(paymentsTable).omit({ id: 
 export type InsertPayment = z.infer<typeof insertPaymentSchema>;
 export type Payment = typeof paymentsTable.$inferSelect;
 
+// ─── Vouchers ─────────────────────────────────────────────────────────────────
+export const vouchersTable = pgTable("vouchers", {
+  id: serial("id").primaryKey(),
+  voucherNumber: text("voucher_number").notNull().unique(),
+  type: text("type").notNull(), // payment | receipt
+  name: text("name").notNull(),
+  reason: text("reason").notNull(),
+  amount: numeric("amount", { precision: 10, scale: 2 }).notNull().default("0"),
+  amountInWords: text("amount_in_words"),
+  date: text("date").notNull(),
+  approvedBy: text("approved_by"),
+  receivedBy: text("received_by"),
+  remarks: text("remarks"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+export const insertVoucherSchema = createInsertSchema(vouchersTable).omit({ id: true, createdAt: true, updatedAt: true });
+export type InsertVoucher = z.infer<typeof insertVoucherSchema>;
+export type Voucher = typeof vouchersTable.$inferSelect;
+
 // ─── Settings ─────────────────────────────────────────────────────────────────
 export const settingsTable = pgTable("settings", {
   id: serial("id").primaryKey(),

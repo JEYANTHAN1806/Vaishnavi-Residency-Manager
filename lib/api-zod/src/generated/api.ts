@@ -715,6 +715,148 @@ export const GetNextVoucherNumberResponse = zod.object({
 
 
 /**
+ * @summary List all vouchers
+ */
+export const GetVouchersQueryParams = zod.object({
+  "type": zod.enum(['payment', 'receipt']).optional(),
+  "search": zod.coerce.string().optional(),
+  "fromDate": zod.coerce.string().optional(),
+  "toDate": zod.coerce.string().optional()
+})
+
+export const GetVouchersResponseItem = zod.object({
+  "id": zod.number(),
+  "voucherNumber": zod.string(),
+  "type": zod.enum(['payment', 'receipt']),
+  "name": zod.string(),
+  "reason": zod.string(),
+  "amount": zod.number(),
+  "amountInWords": zod.string().nullish(),
+  "date": zod.string(),
+  "approvedBy": zod.string().nullish(),
+  "receivedBy": zod.string().nullish(),
+  "remarks": zod.string().nullish(),
+  "createdAt": zod.string().optional(),
+  "updatedAt": zod.string().optional()
+})
+export const GetVouchersResponse = zod.array(GetVouchersResponseItem)
+
+
+/**
+ * @summary Create a new voucher
+ */
+export const CreateVoucherBody = zod.object({
+  "type": zod.enum(['payment', 'receipt']),
+  "name": zod.string(),
+  "reason": zod.string(),
+  "amount": zod.number(),
+  "amountInWords": zod.string().optional(),
+  "date": zod.string().optional(),
+  "approvedBy": zod.string().optional(),
+  "receivedBy": zod.string().optional(),
+  "remarks": zod.string().optional()
+})
+
+export const CreateVoucherResponse = zod.object({
+  "id": zod.number(),
+  "voucherNumber": zod.string(),
+  "type": zod.enum(['payment', 'receipt']),
+  "name": zod.string(),
+  "reason": zod.string(),
+  "amount": zod.number(),
+  "amountInWords": zod.string().nullish(),
+  "date": zod.string(),
+  "approvedBy": zod.string().nullish(),
+  "receivedBy": zod.string().nullish(),
+  "remarks": zod.string().nullish(),
+  "createdAt": zod.string().optional(),
+  "updatedAt": zod.string().optional()
+})
+
+
+/**
+ * @summary Get next voucher number for a voucher type
+ */
+export const GetNextVoucherNumberForTypeQueryParams = zod.object({
+  "type": zod.enum(['payment', 'receipt']).optional()
+})
+
+export const GetNextVoucherNumberForTypeResponse = zod.object({
+  "voucherNumber": zod.string()
+})
+
+
+/**
+ * @summary Get a voucher by ID
+ */
+export const GetVoucherParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const GetVoucherResponse = zod.object({
+  "id": zod.number(),
+  "voucherNumber": zod.string(),
+  "type": zod.enum(['payment', 'receipt']),
+  "name": zod.string(),
+  "reason": zod.string(),
+  "amount": zod.number(),
+  "amountInWords": zod.string().nullish(),
+  "date": zod.string(),
+  "approvedBy": zod.string().nullish(),
+  "receivedBy": zod.string().nullish(),
+  "remarks": zod.string().nullish(),
+  "createdAt": zod.string().optional(),
+  "updatedAt": zod.string().optional()
+})
+
+
+/**
+ * @summary Update a voucher
+ */
+export const UpdateVoucherParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const UpdateVoucherBody = zod.object({
+  "type": zod.enum(['payment', 'receipt']).optional(),
+  "name": zod.string().optional(),
+  "reason": zod.string().optional(),
+  "amount": zod.number().optional(),
+  "amountInWords": zod.string().optional(),
+  "date": zod.string().optional(),
+  "approvedBy": zod.string().optional(),
+  "receivedBy": zod.string().optional(),
+  "remarks": zod.string().optional()
+})
+
+export const UpdateVoucherResponse = zod.object({
+  "id": zod.number(),
+  "voucherNumber": zod.string(),
+  "type": zod.enum(['payment', 'receipt']),
+  "name": zod.string(),
+  "reason": zod.string(),
+  "amount": zod.number(),
+  "amountInWords": zod.string().nullish(),
+  "date": zod.string(),
+  "approvedBy": zod.string().nullish(),
+  "receivedBy": zod.string().nullish(),
+  "remarks": zod.string().nullish(),
+  "createdAt": zod.string().optional(),
+  "updatedAt": zod.string().optional()
+})
+
+
+/**
+ * @summary Delete a voucher
+ */
+export const DeleteVoucherParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const DeleteVoucherResponse = zod.void()
+
+
+/**
  * @summary Get dashboard statistics
  */
 export const GetDashboardStatsResponse = zod.object({

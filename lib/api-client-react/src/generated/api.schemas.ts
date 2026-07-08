@@ -403,6 +403,54 @@ export interface VoucherNumberResponse {
   voucherNumber: string;
 }
 
+export type VoucherType = typeof VoucherType[keyof typeof VoucherType];
+
+
+export const VoucherType = {
+  payment: 'payment',
+  receipt: 'receipt',
+} as const;
+
+export interface Voucher {
+  id: number;
+  voucherNumber: string;
+  type: VoucherType;
+  name: string;
+  reason: string;
+  amount: number;
+  amountInWords?: string | null;
+  date: string;
+  approvedBy?: string | null;
+  receivedBy?: string | null;
+  remarks?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface VoucherInput {
+  type: VoucherType;
+  name: string;
+  reason: string;
+  amount: number;
+  amountInWords?: string;
+  date?: string;
+  approvedBy?: string;
+  receivedBy?: string;
+  remarks?: string;
+}
+
+export interface VoucherUpdate {
+  type?: VoucherType;
+  name?: string;
+  reason?: string;
+  amount?: number;
+  amountInWords?: string;
+  date?: string;
+  approvedBy?: string;
+  receivedBy?: string;
+  remarks?: string;
+}
+
 export interface DashboardStats {
   todayCheckIns: number;
   todayCheckOuts: number;
@@ -497,6 +545,33 @@ status?: string;
 export type GetPaymentsParams = {
 guestId?: number;
 };
+
+export type GetVouchersParams = {
+type?: GetVouchersType;
+search?: string;
+fromDate?: string;
+toDate?: string;
+};
+
+export type GetVouchersType = typeof GetVouchersType[keyof typeof GetVouchersType];
+
+
+export const GetVouchersType = {
+  payment: 'payment',
+  receipt: 'receipt',
+} as const;
+
+export type GetNextVoucherNumberForTypeParams = {
+type?: GetNextVoucherNumberForTypeType;
+};
+
+export type GetNextVoucherNumberForTypeType = typeof GetNextVoucherNumberForTypeType[keyof typeof GetNextVoucherNumberForTypeType];
+
+
+export const GetNextVoucherNumberForTypeType = {
+  payment: 'payment',
+  receipt: 'receipt',
+} as const;
 
 export type GetRevenueReportParams = {
 period?: GetRevenueReportPeriod;

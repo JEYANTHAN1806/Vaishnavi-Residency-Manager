@@ -25,10 +25,12 @@ import type {
   CheckoutInput,
   DashboardStats,
   GetGuestsParams,
+  GetNextVoucherNumberForTypeParams,
   GetOccupancyReportParams,
   GetPaymentsParams,
   GetReservationsParams,
   GetRevenueReportParams,
+  GetVouchersParams,
   Guest,
   GuestInput,
   GuestUpdate,
@@ -50,7 +52,10 @@ import type {
   User,
   UserInput,
   UserUpdate,
-  VoucherNumberResponse
+  Voucher,
+  VoucherInput,
+  VoucherNumberResponse,
+  VoucherUpdate
 } from './api.schemas';
 
 import { customFetch } from '../custom-fetch';
@@ -1939,6 +1944,462 @@ export function useGetNextVoucherNumber<TData = Awaited<ReturnType<typeof getNex
 
 
 
+
+export const getGetVouchersUrl = (params?: GetVouchersParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/vouchers?${stringifiedParams}` : `/api/vouchers`
+}
+
+/**
+ * @summary List all vouchers
+ */
+export const getVouchers = async (params?: GetVouchersParams, options?: RequestInit): Promise<Voucher[]> => {
+
+  return customFetch<Voucher[]>(getGetVouchersUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetVouchersQueryKey = (params?: GetVouchersParams,) => {
+    return [
+    `/api/vouchers`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetVouchersQueryOptions = <TData = Awaited<ReturnType<typeof getVouchers>>, TError = ErrorType<unknown>>(params?: GetVouchersParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getVouchers>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetVouchersQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getVouchers>>> = ({ signal }) => getVouchers(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getVouchers>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetVouchersQueryResult = NonNullable<Awaited<ReturnType<typeof getVouchers>>>
+export type GetVouchersQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary List all vouchers
+ */
+
+export function useGetVouchers<TData = Awaited<ReturnType<typeof getVouchers>>, TError = ErrorType<unknown>>(
+ params?: GetVouchersParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getVouchers>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetVouchersQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getCreateVoucherUrl = () => {
+
+
+
+
+  return `/api/vouchers`
+}
+
+/**
+ * @summary Create a new voucher
+ */
+export const createVoucher = async (voucherInput: VoucherInput, options?: RequestInit): Promise<Voucher> => {
+
+  return customFetch<Voucher>(getCreateVoucherUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(voucherInput)
+  }
+);}
+
+
+
+
+export const getCreateVoucherMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createVoucher>>, TError,{data: BodyType<VoucherInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createVoucher>>, TError,{data: BodyType<VoucherInput>}, TContext> => {
+
+const mutationKey = ['createVoucher'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createVoucher>>, {data: BodyType<VoucherInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createVoucher(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateVoucherMutationResult = NonNullable<Awaited<ReturnType<typeof createVoucher>>>
+    export type CreateVoucherMutationBody = BodyType<VoucherInput>
+    export type CreateVoucherMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Create a new voucher
+ */
+export const useCreateVoucher = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createVoucher>>, TError,{data: BodyType<VoucherInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createVoucher>>,
+        TError,
+        {data: BodyType<VoucherInput>},
+        TContext
+      > => {
+      return useMutation(getCreateVoucherMutationOptions(options));
+    }
+
+export const getGetNextVoucherNumberForTypeUrl = (params?: GetNextVoucherNumberForTypeParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/vouchers/next-voucher-number?${stringifiedParams}` : `/api/vouchers/next-voucher-number`
+}
+
+/**
+ * @summary Get next voucher number for a voucher type
+ */
+export const getNextVoucherNumberForType = async (params?: GetNextVoucherNumberForTypeParams, options?: RequestInit): Promise<VoucherNumberResponse> => {
+
+  return customFetch<VoucherNumberResponse>(getGetNextVoucherNumberForTypeUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetNextVoucherNumberForTypeQueryKey = (params?: GetNextVoucherNumberForTypeParams,) => {
+    return [
+    `/api/vouchers/next-voucher-number`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetNextVoucherNumberForTypeQueryOptions = <TData = Awaited<ReturnType<typeof getNextVoucherNumberForType>>, TError = ErrorType<unknown>>(params?: GetNextVoucherNumberForTypeParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getNextVoucherNumberForType>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetNextVoucherNumberForTypeQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getNextVoucherNumberForType>>> = ({ signal }) => getNextVoucherNumberForType(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getNextVoucherNumberForType>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetNextVoucherNumberForTypeQueryResult = NonNullable<Awaited<ReturnType<typeof getNextVoucherNumberForType>>>
+export type GetNextVoucherNumberForTypeQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Get next voucher number for a voucher type
+ */
+
+export function useGetNextVoucherNumberForType<TData = Awaited<ReturnType<typeof getNextVoucherNumberForType>>, TError = ErrorType<unknown>>(
+ params?: GetNextVoucherNumberForTypeParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getNextVoucherNumberForType>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetNextVoucherNumberForTypeQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetVoucherUrl = (id: number,) => {
+
+
+
+
+  return `/api/vouchers/${id}`
+}
+
+/**
+ * @summary Get a voucher by ID
+ */
+export const getVoucher = async (id: number, options?: RequestInit): Promise<Voucher> => {
+
+  return customFetch<Voucher>(getGetVoucherUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetVoucherQueryKey = (id: number,) => {
+    return [
+    `/api/vouchers/${id}`
+    ] as const;
+    }
+
+
+export const getGetVoucherQueryOptions = <TData = Awaited<ReturnType<typeof getVoucher>>, TError = ErrorType<void>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getVoucher>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetVoucherQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getVoucher>>> = ({ signal }) => getVoucher(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getVoucher>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetVoucherQueryResult = NonNullable<Awaited<ReturnType<typeof getVoucher>>>
+export type GetVoucherQueryError = ErrorType<void>
+
+
+/**
+ * @summary Get a voucher by ID
+ */
+
+export function useGetVoucher<TData = Awaited<ReturnType<typeof getVoucher>>, TError = ErrorType<void>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getVoucher>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetVoucherQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getUpdateVoucherUrl = (id: number,) => {
+
+
+
+
+  return `/api/vouchers/${id}`
+}
+
+/**
+ * @summary Update a voucher
+ */
+export const updateVoucher = async (id: number,
+    voucherUpdate: VoucherUpdate, options?: RequestInit): Promise<Voucher> => {
+
+  return customFetch<Voucher>(getUpdateVoucherUrl(id),
+  {
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(voucherUpdate)
+  }
+);}
+
+
+
+
+export const getUpdateVoucherMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateVoucher>>, TError,{id: number;data: BodyType<VoucherUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateVoucher>>, TError,{id: number;data: BodyType<VoucherUpdate>}, TContext> => {
+
+const mutationKey = ['updateVoucher'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateVoucher>>, {id: number;data: BodyType<VoucherUpdate>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  updateVoucher(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateVoucherMutationResult = NonNullable<Awaited<ReturnType<typeof updateVoucher>>>
+    export type UpdateVoucherMutationBody = BodyType<VoucherUpdate>
+    export type UpdateVoucherMutationError = ErrorType<void>
+
+    /**
+ * @summary Update a voucher
+ */
+export const useUpdateVoucher = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateVoucher>>, TError,{id: number;data: BodyType<VoucherUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updateVoucher>>,
+        TError,
+        {id: number;data: BodyType<VoucherUpdate>},
+        TContext
+      > => {
+      return useMutation(getUpdateVoucherMutationOptions(options));
+    }
+
+export const getDeleteVoucherUrl = (id: number,) => {
+
+
+
+
+  return `/api/vouchers/${id}`
+}
+
+/**
+ * @summary Delete a voucher
+ */
+export const deleteVoucher = async (id: number, options?: RequestInit): Promise<void> => {
+
+  return customFetch<void>(getDeleteVoucherUrl(id),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+
+
+export const getDeleteVoucherMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteVoucher>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteVoucher>>, TError,{id: number}, TContext> => {
+
+const mutationKey = ['deleteVoucher'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteVoucher>>, {id: number}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteVoucher(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteVoucherMutationResult = NonNullable<Awaited<ReturnType<typeof deleteVoucher>>>
+
+    export type DeleteVoucherMutationError = ErrorType<void>
+
+    /**
+ * @summary Delete a voucher
+ */
+export const useDeleteVoucher = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteVoucher>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof deleteVoucher>>,
+        TError,
+        {id: number},
+        TContext
+      > => {
+      return useMutation(getDeleteVoucherMutationOptions(options));
+    }
 
 export const getGetDashboardStatsUrl = () => {
 

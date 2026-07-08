@@ -1,10 +1,6 @@
 import { Link, useLocation } from "wouter";
 import { useGetMe, useLogout } from "@workspace/api-client-react";
-import { 
-  LayoutDashboard, UserPlus, CalendarCheck, LogIn, LogOut, BedDouble, 
-  CreditCard, Printer, History, BarChart3, Settings2, Moon, Sun,
-  Menu, X
-} from "lucide-react";
+import { LayoutDashboard, UserPlus, CalendarCheck, LogIn, LogOut, BedDouble, CreditCard, Printer, History, ChartBar as BarChart3, Settings2, Moon, Sun, Menu, X, FileText } from "lucide-react";
 import { useTheme } from "@/providers/ThemeProvider";
 import { Button } from "@/components/ui/button";
 import { clearAuth } from "@/lib/auth";
@@ -19,6 +15,8 @@ const navItems = [
   { href: "/checkout", label: "Check Out", icon: LogOut },
   { href: "/rooms", label: "Rooms", icon: BedDouble },
   { href: "/payments", label: "Payments", icon: CreditCard },
+  { href: "/vouchers/new", label: "New Voucher", icon: FileText },
+  { href: "/vouchers/history", label: "Voucher History", icon: History },
   { href: "/print-bills", label: "Print Bills", icon: Printer },
   { href: "/guest-history", label: "Guest History", icon: History },
   { href: "/reports", label: "Reports", icon: BarChart3 },

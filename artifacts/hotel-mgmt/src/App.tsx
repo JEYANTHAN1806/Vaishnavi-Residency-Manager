@@ -16,6 +16,8 @@ import CheckOut from "@/pages/checkout";
 import Rooms from "@/pages/rooms";
 import Reservations from "@/pages/reservations";
 import Payments from "@/pages/payments";
+import NewVoucher from "@/pages/vouchers/new";
+import VoucherHistory from "@/pages/vouchers/history";
 import PrintBills from "@/pages/print-bills";
 import GuestHistory from "@/pages/guest-history";
 import Reports from "@/pages/reports";
@@ -44,6 +46,8 @@ function Router() {
         <Route path="/rooms" component={Rooms} />
         <Route path="/reservations" component={Reservations} />
         <Route path="/payments" component={Payments} />
+        <Route path="/vouchers/new" component={NewVoucher} />
+        <Route path="/vouchers/history" component={VoucherHistory} />
         <Route path="/print-bills" component={PrintBills} />
         <Route path="/guest-history" component={GuestHistory} />
         <Route path="/reports" component={Reports} />
