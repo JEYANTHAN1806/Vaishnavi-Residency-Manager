@@ -8,7 +8,7 @@ import {
   deleteVoucher as deleteVoucherApi,
   type Voucher,
   type VoucherInput,
-} from "./supabase";
+} from "./voucher-api";
 
 const queryKey = ["vouchers"] as const;
 
